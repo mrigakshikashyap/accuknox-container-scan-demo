@@ -1,0 +1,24 @@
+name: AccuKnox Container Scan
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  container-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run AccuKnox Container Scanner
+        uses: accuknox/container-scan-action@v1.0.0
+        with:
+          endpoint: ${{ secrets.ACCUKNOX_ENDPOINT }}
+          token: ${{ secrets.ACCUKNOX_TOKEN }}
+          tenant_id: ${{ secrets.TENANT_ID }}
+          image: "mrigakshikashyap/vuln-app"
+          tag: "latest"
+          severity: "HIGH,CRITICAL"
+          label: "containerscan"
