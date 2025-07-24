@@ -1,24 +1,33 @@
-name: AccuKnox Container Scan
+name: AccuKnox Container Build & Scan
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
-  container-scan:
+  build-and-scan:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
 
-      - name: Run AccuKnox Container Scanner
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Image (locally in CI)
+        run: |
+          docker build -t vuln-app:latest .
+
+      - name: AccuKnox Container Scan (local image)
         uses: accuknox/container-scan-action@1.0.0
         with:
           endpoint: ${{ secrets.ACCUKNOX_ENDPOINT }}
           token: ${{ secrets.ACCUKNOX_TOKEN }}
           tenant_id: ${{ secrets.TENANT_ID }}
-          image: "mrigakshikashyap/vuln-app"
+          image: "vuln-app"
           tag: "latest"
           severity: "HIGH,CRITICAL"
           label: "containerscan"
