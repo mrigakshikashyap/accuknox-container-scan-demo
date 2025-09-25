@@ -1,2 +1,2 @@
 # accuknox-container-scan-demo
-<!-- Trigger scan -- 2>
+<!-- Trigger scan --- 2>
